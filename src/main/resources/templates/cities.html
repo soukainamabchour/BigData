@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="webjars/jquery/3.4.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Cities</title>
+</head>
+<body>
+<div class="container justify-content-center mt-3">
+    <div class="row ">
+        <div class="col-md-12">
+            <div class="card" >
+                <h5 class="card-header">Cities</h5>
+                <div class="card-body">
+                    <form class="form-inline" th:action="@{cities}" method="get">
+                        <input class="form-control mr-sm-2" type="text" name="name"
+                               th:value="${name}">
+                        <button class="btn btn-primary my-2 my-sm-0"
+                                type="submit">
+                            Search
+                        </button>
+                        <label style="margin-left: 2mm; font-weight: bold">Total : </label>
+                        <label style="margin-left: 4mm; " th:text="${result}"></label>
+                    </form>
+                    <div class="container mt-3">
+                        <table class="table table-striped" id="table">
+                            <tr>
+                                <th>Name</th>
+                                <th>Sub-Country</th>
+                                <th>Country</th>
+                                <th>GeoName ID</th>
+                                <th colspan="2" class="text-center text-muted">Operations</th>
+                            </tr>
+                            <tr th:each="c:${cityList}">
+                                <td th:text="${c.name}"></td>
+                                <td th:text="${c.subcountry}"></td>
+                                <td th:text="${c.country}"></td>
+                                <td th:text="${c.geonameid}"></td>
+                                <td>
+                                    <form th:action="@{deleteCity}" method="post">
+                                        <input type="hidden" name="id" th:value="${c.id}"/>
+                                        <input type="hidden" name="page" th:value="${currentPage}"/>
+                                        <input type="hidden" name="name" th:value="${name}"/>
+                                        <input type="hidden" name="size" th:value="${size}"/>
+                                        <button type="submit"
+                                                class="btn btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a th:href="@{editCity(id=${c.id})}"
+                                       class="btn btn-warning">Update</a>
+                                </td>
+                            </tr>
+                        </table>
+                        <a th:href="@{formCity}"
+                           class="btn btn-block btn-success mb-3">Add</a>
+                    </div>
+                    <ul class="nav nav-pills justify-content-center">
+                        <li th:each="page,status:${pages}">
+                            <a
+                               th:class="${status.index==currentPage?'btn btn-warning':'btn'}"
+                               th:href="@{cities(page=${status.index},size=${size},name=${name})}"
+                               th:text="${status.index}+1">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
